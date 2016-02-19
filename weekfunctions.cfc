@@ -67,7 +67,7 @@ component
 	}
 
 	public struct function dateInWeek( required string d )
-		hint = "Return the weeknumber and year that weeknumber belongs to of a given date."
+		hint = "Returns a struct with the week number and year a given date belongs to."
 	{
 		result = {
 			week: 0,
