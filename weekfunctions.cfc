@@ -76,23 +76,27 @@ component
 
 		if( isDate( arguments.d ) ) {
 			result.year = year( arguments.d );
-			/*
-				Get the first week of the date's year's monday
-			*/
-			var fMon = this.weekStartEnd( result.year, 1, true ).start;
+			 if( server.coldFusion.productName EQ 'Lucee' ) {
+				result.week = lsWeek( arguments.d, 'nl_NL' );
+			} else {
+				/*
+					We're dealing with ACF and need to use the following functions:
+					Get the first week of the date's year's monday
+				*/
+				var fMon = this.weekStartEnd( result.year, 1, true ).start;
 
-			/*
-				If our date is earlier than the first monday, we have to look in last year
-			*/
-			if( dateCompare( arguments.d, fMon, 'd' ) EQ -1 ) {
-				result.year -= 1;
-				fMon = this.weekStartEnd( result.year, 1, true ).start;
+				/*
+					If our date is earlier than the first monday, we have to look in last year
+				*/
+				if( dateCompare( arguments.d, fMon, 'd' ) EQ -1 ) {
+					result.year -= 1;
+					fMon = this.weekStartEnd( result.year, 1, true ).start;
+				}
+				/*
+					How many days have passed since the first monay? Divide by 7 to get weeks, then floor it
+				*/
+				result.week = int( dateDiff( 'd', fMon, arguments.d ) / 7 ) + 1;
 			}
-			/*
-				How many days have passed since the first monay? Divide by 7 to get weeks, then floor it
-			*/
-			result.week = int( dateDiff( 'd', fMon, arguments.d ) / 7 ) + 1;
-
 			return result;
 		} else {
 			throw( 'Argument d to function dateInWeek() must be a valid ColdFusion date', 'Custom' );
